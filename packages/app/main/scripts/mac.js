@@ -31,7 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-const packageJson = require('./package.json');
+const packageJson = require('../package.json');
 
 buildMacArtifacts().catch(err => console.error(`Error while building mac artifacts: ${err}`));
 
