@@ -31,29 +31,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-const packageJson = require('../package.json');
+writeLatestYmlFile().catch(e => console.error(e));
 
-buildMacArtifacts().catch(err => console.error(`Error while building mac artifacts: ${err}`));
+/** Generates latest-mac.yml */
+async function writeLatestYmlFile() {
+  const common = require('./common');
+  const packageJson = require('../package.json');
+  const path = require('path');
+  const fsp = require('fs-extra');
+  const yaml = require('js-yaml');
+  const { hashFileAsync } = common;
 
-async function buildMacArtifacts() {
-  const builder = require('electron-builder');
+  const version = process.env.EMU_VERSION || packageJson.version;
+  const releaseFileName = `BotFramework-Emulator-${version}-mac.zip`;
+  const sha512 = await hashFileAsync(path.normalize(`./dist/${releaseFileName}`));
+  const releaseDate = new Date().toISOString();
 
-  // create build artifacts
-  await builder.build({
-    targets: builder.Platform.MAC.createTarget(['dir'])
-  });
-
-  // create installers
-  const config = packageJson.build;
-  await builder.build({
-    targets: builder.Platform.MAC.createTarget(['zip', 'dmg']),
-    config,
-    prepackaged: './dist/mac'
-  });
-}
-
-// writeLatestYmlFile().catch(e => console.error(e));
-
-// /** Generates latest-linux.yml & latest-linux-ia32.yml */
-// async function writeLatestYmlFile() {
-// };
+  const ymlInfo = {
+    version,
+    releaseDate,
+    githubArtifactName: releaseFilename,
+    path: releaseFilename,
+    sha512
+  };
+  const ymlStr = yaml.safeDump(ymlInfo);
+  fsp.writeFileSync(path.normalize(`./dist/latest-mac.yml`), ymlStr);
+};
