@@ -48,7 +48,7 @@ import { store } from '../data/store';
 import * as EditorActions from '../data/action/editorActions';
 import * as NavBarActions from '../data/action/navBarActions';
 import * as Constants from '../constants';
-import { CommandRegistry } from '@bfemulator/sdk-shared';
+import { CommandRegistry, TelemetryManager } from '@bfemulator/sdk-shared';
 import { ServiceTypes } from 'botframework-config/lib/schema';
 import { SharedConstants } from '@bfemulator/app-shared';
 import { azureArmTokenDataChanged, beginAzureAuthWorkflow, invalidateArmToken } from '../data/action/azureAuthActions';
@@ -106,6 +106,7 @@ export function registerCommands(commandRegistry: CommandRegistry) {
     }
     const themeComponents = Array.prototype.map.call(linkTags, link => link.href); // href is fully qualified
     store.dispatch(switchTheme(themeName, themeComponents));
+    TelemetryManager.trackEvent('app_chooseTheme', { themeName });
   });
 
   // ---------------------------------------------------------------------------

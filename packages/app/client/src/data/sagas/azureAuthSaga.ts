@@ -42,6 +42,7 @@ import { SharedConstants } from '@bfemulator/app-shared';
 import { RootState } from '../store';
 import { DialogService } from '../../ui/dialogs';
 import { AzureAuthState } from '../reducer/azureAuthReducer';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 const getArmTokenFromState = (state: RootState) => state.azureAuth;
 
@@ -59,8 +60,10 @@ export function* getArmToken(action: AzureAuthAction<AzureAuthWorkflow>): Iterab
   if (azureAuth && !('error' in azureAuth)) {
     const persistLogin = yield DialogService.showDialog(action.payload.loginSuccessDialog, azureAuth);
     yield call(CommandServiceImpl.remoteCall.bind(CommandServiceImpl), PersistAzureLoginChanged, persistLogin);
+    TelemetryManager.trackEvent('signIn_success');
   } else {
     yield DialogService.showDialog(action.payload.loginFailedDialog);
+    TelemetryManager.trackEvent('signIn_failure');
   }
   yield put(azureArmTokenDataChanged(azureAuth.access_token));
   return azureAuth;

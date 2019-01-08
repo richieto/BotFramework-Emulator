@@ -35,27 +35,11 @@ import * as AppInsights from 'applicationinsights';
 
 const INSTRUMENTATION_KEY = '631faf57-1d84-40b4-9a71-fce28a3934a8';
 
-export const TelemetryManager = new class {
-  private _client: AppInsights.TelemetryClient;
+export class TelemetryManager {
+  private static _client: AppInsights.TelemetryClient;
+  private static _hasStarted: boolean = false;
 
-  constructor() {
-    // 
-  }
-
-  public startup(): void {
-    AppInsights
-      .setup(INSTRUMENTATION_KEY)
-      .setAutoCollectConsole(false)
-      .setAutoCollectDependencies(false)
-      .setAutoCollectExceptions(false)
-      .setAutoCollectPerformance(false)
-      .setAutoCollectRequests(false)
-      .start();
-
-    this._client = AppInsights.defaultClient;
-  }
-
-  public trackEvent(name: string, properties?: { [key: string]: any }): void {
+  public static trackEvent(name: string, properties?: { [key: string]: any }): void {
     if (!this._client) {
       this.startup();
     }
@@ -63,4 +47,20 @@ export const TelemetryManager = new class {
     const client = this._client;
     client.trackEvent({ name, properties });
   }
-};
+
+  private static startup(): void {
+    if (!this._hasStarted) {
+      AppInsights
+        .setup(INSTRUMENTATION_KEY) 
+        .setAutoCollectConsole(false)
+        .setAutoCollectDependencies(false)
+        .setAutoCollectExceptions(false)
+        .setAutoCollectPerformance(false)
+        .setAutoCollectRequests(false)
+        .start();
+
+      this._client = AppInsights.defaultClient;
+      this._hasStarted = true;
+    }
+  }
+}

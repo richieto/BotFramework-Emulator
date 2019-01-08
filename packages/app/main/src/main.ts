@@ -59,6 +59,7 @@ import { sendNotificationToClient } from './utils/sendNotificationToClient';
 import Users from '@bfemulator/emulator-core/lib/facility/users';
 import { openFileFromCommandLine } from './utils/openFileFromCommandLine';
 import { appendCustomUserAgent } from './appendCustomUserAgent';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 export let mainWindow: Window;
 export let windowManager: WindowManager;
@@ -422,6 +423,8 @@ const createMainWindow = async () => {
     saveSettings<PersistentSettings>('server.json', getSettings());
     Electron.app.quit();
   });
+
+  TelemetryManager.trackEvent('app_launch', { method: 'executable' });
 };
 
 function loadMainPage() {
