@@ -52,12 +52,15 @@ export class TelemetryManager {
     if (!this._hasStarted) {
       AppInsights
         .setup(INSTRUMENTATION_KEY) 
+        // turn off extra instrmentation
         .setAutoCollectConsole(false)
         .setAutoCollectDependencies(false)
         .setAutoCollectExceptions(false)
         .setAutoCollectPerformance(false)
-        .setAutoCollectRequests(false)
-        .start();
+        .setAutoCollectRequests(false);
+      // do not collect the user's machine name
+      AppInsights.defaultClient.context.tags[AppInsights.defaultClient.context.keys.cloudRoleInstance] = '';
+      AppInsights.start();
 
       this._client = AppInsights.defaultClient;
       this._hasStarted = true;
