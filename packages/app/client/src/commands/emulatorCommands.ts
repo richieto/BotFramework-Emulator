@@ -32,7 +32,7 @@
 //
 
 import { newNotification, SharedConstants } from '@bfemulator/app-shared';
-import { Activity, CommandRegistryImpl, TelemetryManager, uniqueId } from '@bfemulator/sdk-shared';
+import { Activity, CommandRegistryImpl, TelemetryService, uniqueId } from '@bfemulator/sdk-shared';
 import { IEndpointService } from 'botframework-config/lib/schema';
 import * as Constants from '../constants';
 import * as ChatActions from '../data/action/chatActions';
@@ -75,7 +75,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
       }
 
       if (!isLocalHostUrl(endpoint.endpoint)) {
-        TelemetryManager.trackEvent('livechat_openRemote');
+        TelemetryService.trackEvent('livechat_openRemote');
       }
 
       store.dispatch(EditorActions.open({

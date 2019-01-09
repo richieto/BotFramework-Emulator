@@ -59,7 +59,7 @@ import { sendNotificationToClient } from './utils/sendNotificationToClient';
 import Users from '@bfemulator/emulator-core/lib/facility/users';
 import { openFileFromCommandLine } from './utils/openFileFromCommandLine';
 import { appendCustomUserAgent } from './appendCustomUserAgent';
-import { TelemetryManager } from '@bfemulator/sdk-shared';
+import { TelemetryService } from '@bfemulator/sdk-shared';
 import { Protocol } from './constants';
 
 export let mainWindow: Window;
@@ -426,7 +426,7 @@ const createMainWindow = async () => {
   });
 
   const launchedByProtocol = process.argv.some(arg => arg.includes(Protocol));
-  TelemetryManager.trackEvent('app_launch', { method: launchedByProtocol ? 'protocol' : 'binary' });
+  TelemetryService.trackEvent('app_launch', { method: launchedByProtocol ? 'protocol' : 'binary' });
 };
 
 function loadMainPage() {

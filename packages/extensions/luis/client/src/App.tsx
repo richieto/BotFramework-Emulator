@@ -54,7 +54,7 @@ import { LuisTraceInfo } from './Models/LuisTraceInfo';
 
 import * as styles from './App.scss';
 import { json2HTML } from '@bfemulator/sdk-shared/built/utils/json2HTML';
-import { TelemetryManager } from '@bfemulator/sdk-shared';
+import { TelemetryService } from '@bfemulator/sdk-shared';
 
 let $host: InspectorHost = (window as any).host;
 const LuisApiBasePath = 'https://westus.api.cognitive.microsoft.com/luis/api/v2.0';
@@ -284,10 +284,10 @@ class App extends Component<any, AppState> {
         pendingTrain: false,
         pendingPublish: true
       });
-      TelemetryManager.trackEvent('luis_trainSuccess');
+      TelemetryService.trackEvent('luis_trainSuccess');
     } catch (err) {
       $host.logger.error(err.message);
-      TelemetryManager.trackEvent('luis_trainFailure', { error: err.message });
+      TelemetryService.trackEvent('luis_trainFailure', { error: err.message });
     } finally {
       $host.setAccessoryState(TrainAccessoryId, AccessoryDefaultState);
     }
@@ -302,10 +302,10 @@ class App extends Component<any, AppState> {
         pendingPublish: false,
         pendingTrain: false
       });
-      TelemetryManager.trackEvent('luis_publishSuccess');
+      TelemetryService.trackEvent('luis_publishSuccess');
     } catch (err) {
       $host.logger.error(err.message);
-      TelemetryManager.trackEvent('luis_publishFailure', { error: err.message });
+      TelemetryService.trackEvent('luis_publishFailure', { error: err.message });
     } finally {
       $host.setAccessoryState(TrainAccessoryId, AccessoryDefaultState);
     }

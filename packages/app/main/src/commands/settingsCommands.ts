@@ -33,7 +33,7 @@
 
 import { dispatch, getSettings } from '../settingsData/store';
 import { FrameworkSettings, SharedConstants } from '@bfemulator/app-shared';
-import { CommandRegistryImpl, TelemetryManager } from '@bfemulator/sdk-shared';
+import { CommandRegistryImpl, TelemetryService } from '@bfemulator/sdk-shared';
 import { setFramework } from '../settingsData/actions/frameworkActions';
 
 /** Registers settings commands */
@@ -47,7 +47,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
     const { ngrokPath = '' } = frameworkSettings;
     const { ngrokPath: newNgrokPath } = settings;
     if (newNgrokPath !== ngrokPath) {
-      TelemetryManager.trackEvent('app_configureNgrok');
+      TelemetryService.trackEvent('app_configureNgrok');
     }
     dispatch(setFramework(settings));
   });

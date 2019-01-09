@@ -35,7 +35,7 @@ import * as AppInsights from 'applicationinsights';
 
 const INSTRUMENTATION_KEY = '631faf57-1d84-40b4-9a71-fce28a3934a8';
 
-export class TelemetryManager {
+export class TelemetryService {
   private static _client: AppInsights.TelemetryClient;
   private static _hasStarted: boolean = false;
 

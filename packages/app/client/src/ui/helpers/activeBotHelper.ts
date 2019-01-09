@@ -33,7 +33,7 @@
 
 import { getBotDisplayName, newNotification, SharedConstants } from '@bfemulator/app-shared';
 import { IEndpointService, ServiceTypes } from 'botframework-config/lib/schema';
-import { BotConfigWithPath, mergeEndpoints, TelemetryManager } from '@bfemulator/sdk-shared';
+import { BotConfigWithPath, mergeEndpoints, TelemetryService } from '@bfemulator/sdk-shared';
 import { hasNonGlobalTabs } from '../../data/editorHelpers';
 import { CommandServiceImpl } from '../../platform/commands/commandServiceImpl';
 import { getActiveBot } from '../../data/botHelpers';
@@ -207,7 +207,7 @@ export const ActiveBotHelper = new class {
               }
               await CommandServiceImpl.remoteCall(SharedConstants.Commands.Bot.SetActive, bot);
               await CommandServiceImpl.call(SharedConstants.Commands.Bot.Load, bot);
-              TelemetryManager.trackEvent(`bot_open`, { method: 'file_browse' });
+              TelemetryService.trackEvent(`bot_open`, { method: 'file_browse' });
             } catch (err) {
               console.error('Error while trying to open bot from file: ', err);
               throw new Error(`[confirmAndOpenBotFromFile] Error while trying to open bot from file: ${err}`);

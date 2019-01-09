@@ -36,7 +36,7 @@ import {
   BotConfigWithPath,
   CommandRegistryImpl,
   mergeEndpoints,
-  TelemetryManager,
+  TelemetryService,
   uniqueId
 } from '@bfemulator/sdk-shared';
 import { BotConfigurationBase } from 'botframework-config/lib';
@@ -88,7 +88,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
     }
 
     const telemetryInfo = { path: bot.path, hasSecret: !!secret };
-    TelemetryManager.trackEvent('bot_create', telemetryInfo);
+    TelemetryService.trackEvent('bot_create', telemetryInfo);
     return bot;
   });
 

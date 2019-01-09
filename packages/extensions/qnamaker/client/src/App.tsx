@@ -43,7 +43,7 @@ import QnAMakerHeader from './Views/QnAMakerHeader/QnAMakerHeader';
 import PhrasingsView from './Views/PhrasingsView/PhrasingsView';
 import AnswersView from './Views/AnswersView/AnswersView';
 import AppStateAdapter from './AppStateAdapter';
-import { TelemetryManager } from '@bfemulator/sdk-shared';
+import { TelemetryService } from '@bfemulator/sdk-shared';
 
 let $host: InspectorHost = (window as any).host;
 const QnAApiBasePath = 'https://westus.api.cognitive.microsoft.com/qnamaker/v4.0';
@@ -244,14 +244,14 @@ class App extends React.Component<any, AppState> {
           const response = await this.client.updateKnowledgebase(this.state.traceInfo.knowledgeBaseId, body);
           success = response.status === 200;
           $host.logger.log('Successfully trained Knowledge Base ' + this.state.traceInfo.knowledgeBaseId);
-          TelemetryManager.trackEvent('qna_trainSuccess');
+          TelemetryService.trackEvent('qna_trainSuccess');
         } else {
           $host.logger.error('Select an answer before trying to train.');
         }
       }
     } catch (err) {
       $host.logger.error(err.message);
-      TelemetryManager.trackEvent('qna_trainFailure', { error: err.message });
+      TelemetryService.trackEvent('qna_trainFailure', { error: err.message });
     } finally {
       $host.setAccessoryState(TrainAccessoryId, AccessoryDefaultState);
       this.setAppPersistentState({
@@ -271,15 +271,15 @@ class App extends React.Component<any, AppState> {
         success = response.status === 204;
         if (success) {
           $host.logger.log('Successfully published Knowledge Base ' + this.state.traceInfo.knowledgeBaseId);
-          TelemetryManager.trackEvent('qna_publishSuccess');
+          TelemetryService.trackEvent('qna_publishSuccess');
         } else {
           $host.logger.error('Request to QnA Maker failed. ' + response.statusText);
-          TelemetryManager.trackEvent('qna_publishFailure', { error: response.statusText });
+          TelemetryService.trackEvent('qna_publishFailure', { error: response.statusText });
         }
       }
     } catch (err) {
       $host.logger.error(err.message);
-      TelemetryManager.trackEvent('qna_publishFailure', { error: err.message });
+      TelemetryService.trackEvent('qna_publishFailure', { error: err.message });
     } finally {
       $host.setAccessoryState(PublishAccessoryId, AccessoryDefaultState);
     }

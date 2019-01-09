@@ -31,7 +31,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { BotConfigWithPath, CommandRegistryImpl, TelemetryManager } from '@bfemulator/sdk-shared';
+import { BotConfigWithPath, CommandRegistryImpl, TelemetryService } from '@bfemulator/sdk-shared';
 import { ActiveBotHelper } from '../ui/helpers/activeBotHelper';
 import { pathExistsInRecentBots } from '../data/botHelpers';
 import { CommandServiceImpl } from '../platform/commands/commandServiceImpl';
@@ -54,7 +54,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
   // ---------------------------------------------------------------------------
   // Switches the current active bot
   commandRegistry.registerCommand(Commands.Bot.Switch, (bot: BotConfigWithPath | string) => {
-      TelemetryManager.trackEvent('bot_open', { method: 'bots_list' });
+      TelemetryService.trackEvent('bot_open', { method: 'bots_list' });
       return ActiveBotHelper.confirmAndSwitchBots(bot);
   });
 
