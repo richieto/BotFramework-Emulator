@@ -37,6 +37,7 @@ import { ExtensionManager, InspectorAPI } from '../../../../../extensions';
 import LogEntryModel from '@bfemulator/emulator-core/lib/types/log/entry';
 import { ILogItem } from '@bfemulator/emulator-core/lib/types/log/item';
 import LogLevel from '@bfemulator/emulator-core/lib/types/log/level';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 /** One of these will always be "nexted" to the selectedActivity$
  *  subscription when called from within the log
@@ -79,6 +80,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
       const fromLog: ActivitySelectionFromLog = { clicked: true };
       this.props.document.selectedActivity$.next({ ...obj, fromLog });
     }
+    TelemetryManager.trackEvent('log_inspectActivity');
   }
 
   /** Highlights an activity in webchat (triggered by hover in log) */

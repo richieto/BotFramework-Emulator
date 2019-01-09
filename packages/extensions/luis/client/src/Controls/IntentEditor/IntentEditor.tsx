@@ -36,6 +36,7 @@ import { Component } from 'react';
 import { Intent } from '../../Models/Intent';
 import { IntentInfo } from '../../Luis/IntentInfo';
 import * as styles from './IntentEditor.scss';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 const TraceIntentStatesKey: string = Symbol('PersistedTraceIntentStates').toString();
 
@@ -136,6 +137,7 @@ class IntentEditor extends Component<IntentEditorProps, IntentEditorState> {
     this.setAndPersistTraceIntentStates(currentTraceIntentStates);
     if (this.props.intentReassigner) {
       this.props.intentReassigner(newIntent, needsRetrain).catch();
+      TelemetryManager.trackEvent('luis_reassignIntent');
     }
   }
 

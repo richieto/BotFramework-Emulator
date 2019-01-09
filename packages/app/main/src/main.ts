@@ -60,6 +60,7 @@ import Users from '@bfemulator/emulator-core/lib/facility/users';
 import { openFileFromCommandLine } from './utils/openFileFromCommandLine';
 import { appendCustomUserAgent } from './appendCustomUserAgent';
 import { TelemetryManager } from '@bfemulator/sdk-shared';
+import { Protocol } from './constants';
 
 export let mainWindow: Window;
 export let windowManager: WindowManager;
@@ -424,7 +425,8 @@ const createMainWindow = async () => {
     Electron.app.quit();
   });
 
-  TelemetryManager.trackEvent('app_launch', { method: 'executable' });
+  const launchedByProtocol = process.argv.some(arg => arg.includes(Protocol));
+  TelemetryManager.trackEvent('app_launch', { method: launchedByProtocol ? 'protocol' : 'binary' });
 };
 
 function loadMainPage() {

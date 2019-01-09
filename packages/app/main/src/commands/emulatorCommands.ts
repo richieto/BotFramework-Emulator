@@ -33,7 +33,7 @@
 
 import { newBot, newEndpoint, SharedConstants } from '@bfemulator/app-shared';
 import { Conversation } from '@bfemulator/emulator-core';
-import { BotConfigWithPath, CommandRegistryImpl } from '@bfemulator/sdk-shared';
+import { BotConfigWithPath, CommandRegistryImpl, TelemetryManager } from '@bfemulator/sdk-shared';
 import * as fs from 'fs-extra';
 import { sync as mkdirpSync } from 'mkdirp';
 import * as path from 'path';
@@ -102,6 +102,7 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
       mkdirpSync(path.dirname(filename));
       const transcripts = await convo.getTranscript();
       writeFile(filename, transcripts);
+      TelemetryManager.trackEvent('transcript_save');
     }
   });
 

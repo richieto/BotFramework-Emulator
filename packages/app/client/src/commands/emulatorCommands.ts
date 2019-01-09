@@ -32,7 +32,7 @@
 //
 
 import { newNotification, SharedConstants } from '@bfemulator/app-shared';
-import { Activity, CommandRegistryImpl, uniqueId } from '@bfemulator/sdk-shared';
+import { Activity, CommandRegistryImpl, TelemetryManager, uniqueId } from '@bfemulator/sdk-shared';
 import { IEndpointService } from 'botframework-config/lib/schema';
 import * as Constants from '../constants';
 import * as ChatActions from '../data/action/chatActions';
@@ -72,6 +72,10 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
             userId: currentUserId
           }
         ));
+      }
+
+      if (!isLocalHostUrl(endpoint.endpoint)) {
+        TelemetryManager.trackEvent('livechat_openRemote');
       }
 
       store.dispatch(EditorActions.open({
@@ -180,4 +184,15 @@ export function registerCommands(commandRegistry: CommandRegistryImpl) {
       throw new Error(`Error while retrieving activities from main side: ${err}`);
     }
   });
+}
+
+function isLocalHostUrl(url: string): boolean {
+  try {
+    const parsedUrl = new URL(url);
+    const localhostNames = ['localhost', '127.0.0.1', '::1'];
+    return localhostNames.some(name => parsedUrl.hostname === name);
+  } catch (e) {
+    // invalid url was passed in
+    return false;
+  }
 }

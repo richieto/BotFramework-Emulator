@@ -36,6 +36,7 @@ import { SyntheticEvent } from 'react';
 import * as Constants from '../../../constants';
 import { NotificationManager } from '../../../notificationManager';
 import * as styles from './navBar.scss';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 export interface NavBarProps {
   selection?: string;
@@ -96,6 +97,9 @@ export class NavBarComponent extends React.Component<NavBarProps, NavBarState> {
           // TODO: Re-enable once webchat reset bug is fixed
           // (https://github.com/Microsoft/BotFramework-Emulator/issues/825)
           // this.props.showExplorer(true);
+          if (index === 2) {
+            TelemetryManager.trackEvent('navbar_selection', { selection: 'notifications' });
+          }
           this.props.navBarSelectionChanged(selectionMap[index]);
           this.setState({ selection: selectionMap[index] });
         }

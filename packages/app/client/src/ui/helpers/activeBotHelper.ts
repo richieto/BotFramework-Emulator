@@ -207,7 +207,7 @@ export const ActiveBotHelper = new class {
               }
               await CommandServiceImpl.remoteCall(SharedConstants.Commands.Bot.SetActive, bot);
               await CommandServiceImpl.call(SharedConstants.Commands.Bot.Load, bot);
-              TelemetryManager.trackEvent(`bot_open`, { path: filename, method: 'file_browse' });
+              TelemetryManager.trackEvent(`bot_open`, { method: 'file_browse' });
             } catch (err) {
               console.error('Error while trying to open bot from file: ', err);
               throw new Error(`[confirmAndOpenBotFromFile] Error while trying to open bot from file: ${err}`);

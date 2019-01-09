@@ -14,6 +14,7 @@ import { ComponentClass } from 'react';
 import { DialogService } from '../../ui/dialogs/service';
 import { beginAdd } from '../action/notificationActions';
 import { newNotification } from '@bfemulator/app-shared/built';
+import { TelemetryManager } from '@bfemulator/sdk-shared';
 
 function* openContextMenuForResource(action: ResourcesAction<IFileService>): IterableIterator<any> {
   const menuItems = [
@@ -80,8 +81,10 @@ function* doOpenResource(action: ResourcesAction<IFileService>): IterableIterato
   const { path } = action.payload;
   if (isChatFile(path)) {
     yield CommandServiceImpl.call(OpenChatFile, path, true);
+    TelemetryManager.trackEvent('chatFile_open');
   } else if (isTranscriptFile(path)) {
     yield CommandServiceImpl.call(OpenTranscript, path);
+    TelemetryManager.trackEvent('transcriptFile_open');
   }
   // unknown types just fall into the abyss
 }
