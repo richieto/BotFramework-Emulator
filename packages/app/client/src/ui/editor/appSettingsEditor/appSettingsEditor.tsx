@@ -197,6 +197,11 @@ export class AppSettingsEditor extends React.Component<AppSettingsEditorProps, A
               checked={ uncommitted.usePrereleases }
               onChange={ this.onChangeUsePrereleases }
               label="Use pre-release versions"/>
+            <SmallHeader>Data Collection</SmallHeader>
+            <Checkbox className={ styles.checkboxOverrides }
+              checked={ false }
+              onChange={ () => null }
+              label=""/>
           </Column>
         </Row>
         <Row className={ styles.buttonRow } justify={ RowJustification.Right }>
