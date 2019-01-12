@@ -30,17 +30,19 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import * as React from 'react';
-import { Component } from 'react';
-import { IEndpointService } from 'botframework-config/lib/schema';
-import { Chat as WebChat, Speech } from 'botframework-webchat';
-import { CommandServiceImpl } from '../../../../../platform/commands/commandServiceImpl';
-import memoize from '../../../../helpers/memoize';
-import * as styles from './chat.scss';
-import { EmulatorMode } from '../../emulator';
+import { IEndpointService } from "botframework-config/lib/schema";
+import { Chat as WebChat, Speech } from "botframework-webchat";
+import * as React from "react";
+import { Component } from "react";
 
-const CognitiveServices = require('botframework-webchat/CognitiveServices');
-const AdaptiveCardsHostConfig = require('botframework-webchat/adaptivecards-hostconfig.json');
+import { CommandServiceImpl } from "../../../../../platform/commands/commandServiceImpl";
+import memoize from "../../../../helpers/memoize";
+import { EmulatorMode } from "../../emulator";
+
+import * as styles from "./chat.scss";
+
+const CognitiveServices = require("botframework-webchat/CognitiveServices");
+const AdaptiveCardsHostConfig = require("botframework-webchat/adaptivecards-hostconfig.json");
 
 export interface ChatProps {
   document: any;
@@ -62,35 +64,40 @@ function createWebChatProps(
   return {
     adaptiveCardsHostConfig: AdaptiveCardsHostConfig,
     bot: {
-      id: botId || 'bot',
-      name: 'Bot'
+      id: botId || "bot",
+      name: "Bot"
     },
     botConnection: directLine,
     chatTitle: false,
     selectedActivity: selectedActivity$,
-    showShell: mode === 'livechat',
+    showShell: mode === "livechat",
     speechOptions:
-      (endpoint && endpoint.appId && endpoint.appPassword) ? {
-        speechRecognizer: new CognitiveServices.SpeechRecognizer({
-          fetchCallback: getSpeechToken.bind(null, endpoint, false),
-          fetchOnExpiryCallback: getSpeechToken.bind(null, endpoint, true)
-        }),
-        speechSynthesizer: new Speech.BrowserSpeechSynthesizer()
-      } : null,
+      endpoint && endpoint.appId && endpoint.appPassword
+        ? {
+            speechRecognizer: new CognitiveServices.SpeechRecognizer({
+              fetchCallback: getSpeechToken.bind(null, endpoint, false),
+              fetchOnExpiryCallback: getSpeechToken.bind(null, endpoint, true)
+            }),
+            speechSynthesizer: new Speech.BrowserSpeechSynthesizer()
+          }
+        : null,
     user: {
       id: userId,
-      name: 'User'
+      name: "User"
     }
   };
 }
 
-export async function getSpeechToken(endpoint: IEndpointService, refresh: boolean): Promise<string | void> {
+export async function getSpeechToken(
+  endpoint: IEndpointService,
+  refresh: boolean
+): Promise<string | void> {
   if (!endpoint) {
-    console.warn('No endpoint for this chat, cannot fetch speech token.');
+    console.warn("No endpoint for this chat, cannot fetch speech token.");
     return;
   }
 
-  let command = refresh ? 'speech-token:refresh' : 'speech-token:get';
+  const command = refresh ? "speech-token:refresh" : "speech-token:get";
 
   try {
     return await CommandServiceImpl.remoteCall(command, endpoint.id);
@@ -100,7 +107,7 @@ export async function getSpeechToken(endpoint: IEndpointService, refresh: boolea
 }
 
 export class Chat extends Component<ChatProps> {
-  createWebChatPropsMemoized: (
+  public createWebChatPropsMemoized: (
     botId: string,
     userId: string,
     directLine: any,
@@ -115,7 +122,7 @@ export class Chat extends Component<ChatProps> {
     this.createWebChatPropsMemoized = memoize(createWebChatProps);
   }
 
-  render() {
+  public render() {
     const { document, endpoint } = this.props;
 
     if (document.directLine) {
@@ -129,20 +136,16 @@ export class Chat extends Component<ChatProps> {
       );
 
       return (
-        <div id="webchat-container" className={ `${styles.chat} wc-app wc-wide` }>
+        <div id="webchat-container" className={`${styles.chat} wc-app wc-wide`}>
           <WebChat
-            locale={ this.props.locale }
-            key={ document.directLine.token }
-            { ...webChatProps }
+            locale={this.props.locale}
+            key={document.directLine.token}
+            {...webChatProps}
           />
         </div>
       );
     } else {
-      return (
-        <div className={ styles.disconnected }>
-          Not Connected
-        </div>
-      );
+      return <div className={styles.disconnected}>Not Connected</div>;
     }
   }
 }

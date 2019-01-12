@@ -31,9 +31,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { BotNotOpenExplorer as BotNotOpenExplorerComp, BotNotOpenExplorerProps } from './botNotOpenExplorer';
-import { connect } from 'react-redux';
-import * as BotActions from '../../../../data/action/botActions';
+import { connect } from "react-redux";
+
+import * as BotActions from "../../../../data/action/botActions";
+
+import {
+  BotNotOpenExplorer as BotNotOpenExplorerComp,
+  BotNotOpenExplorerProps
+} from "./botNotOpenExplorer";
 
 const mapStateToProps = (): any => ({});
 const mapDispatchToProps = (dispatch): BotNotOpenExplorerProps => ({
@@ -42,4 +47,7 @@ const mapDispatchToProps = (dispatch): BotNotOpenExplorerProps => ({
   }
 });
 
-export const BotNotOpenExplorer = connect(mapStateToProps, mapDispatchToProps)(BotNotOpenExplorerComp);
+export const BotNotOpenExplorer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BotNotOpenExplorerComp);

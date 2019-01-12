@@ -31,15 +31,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { ChannelAccount, ConversationAccount } from './accountTypes';
-import { Attachment } from './attachmentTypes';
-import { Entity } from './entityTypes';
-import { ETagObject } from './eTagTypes';
+import { ChannelAccount, ConversationAccount } from "./accountTypes";
+import { Attachment } from "./attachmentTypes";
+import { Entity } from "./entityTypes";
+import { ETagObject } from "./eTagTypes";
 
-export type ActivityOrID = {
-  activity?: GenericActivity
-  id?: string
-};
+export interface ActivityOrID {
+  activity?: GenericActivity;
+  id?: string;
+}
 
 export interface Activity extends ETagObject {
   type?: string;
@@ -55,8 +55,7 @@ export interface Activity extends ETagObject {
   channelData?: any;
 }
 
-export interface TypingActivity extends Activity {
-}
+export interface TypingActivity extends Activity {}
 
 export interface ConversationUpdateActivity extends Activity {
   membersAdded?: ChannelAccount[];
@@ -89,11 +88,9 @@ export interface MessageActivity extends Activity {
   entities?: Entity[];
 }
 
-export interface ActionActivity extends Activity {
-}
+export interface ActionActivity extends Activity {}
 
-export interface EndOfConversationActivity extends Activity {
-}
+export interface EndOfConversationActivity extends Activity {}
 
 export interface TriggerActivity extends Activity {
   value?: any;
@@ -120,18 +117,17 @@ export interface EventActivity extends Activity {
   relatesTo?: ConversationReference;
 }
 
-export interface GenericActivity extends
-  Activity,
-  TypingActivity,
-  ConversationUpdateActivity,
-  ContactRelationUpdateActivity,
-  MessageActivity,
-  ActionActivity,
-  EndOfConversationActivity,
-  TriggerActivity,
-  EventActivity,
-  InvokeActivity {
-}
+export interface GenericActivity
+  extends Activity,
+    TypingActivity,
+    ConversationUpdateActivity,
+    ContactRelationUpdateActivity,
+    MessageActivity,
+    ActionActivity,
+    EndOfConversationActivity,
+    TriggerActivity,
+    EventActivity,
+    InvokeActivity {}
 
 export interface TraceActivity extends Activity {
   name?: string;

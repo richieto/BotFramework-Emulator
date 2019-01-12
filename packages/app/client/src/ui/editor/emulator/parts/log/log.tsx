@@ -31,11 +31,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import * as React from 'react';
-import * as styles from './log.scss';
-import { Subscription } from 'rxjs';
-import { ActivitySelectionFromLog } from './logEntry';
-import { LogEntry } from './logEntryContainer';
+import * as React from "react";
+import { Subscription } from "rxjs";
+
+import * as styles from "./log.scss";
+import { ActivitySelectionFromLog } from "./logEntry";
+import { LogEntry } from "./logEntryContainer";
 
 export interface LogProps {
   document: any;
@@ -58,12 +59,16 @@ export class Log extends React.Component<LogProps, LogState> {
     };
   }
 
-  componentDidUpdate(): void {
+  public componentDidUpdate(): void {
     let { props, scrollMe, selectedActivitySubscription, state } = this;
     // set up selected activity subscription once it's available
-    if (props.document && props.document.selectedActivity$ && !selectedActivitySubscription) {
-      selectedActivitySubscription =
-        props.document.selectedActivity$.subscribe(obj => {
+    if (
+      props.document &&
+      props.document.selectedActivity$ &&
+      !selectedActivitySubscription
+    ) {
+      selectedActivitySubscription = props.document.selectedActivity$.subscribe(
+        obj => {
           if (obj) {
             if (obj.activity) {
               // this activity came from webchat (activities from webchat are wrapped)
@@ -76,7 +81,9 @@ export class Log extends React.Component<LogProps, LogState> {
               // ex: { id: , from: , to: , ... }
               const activity = obj;
               this.selectedActivity = activity;
-              const { fromLog = {} as ActivitySelectionFromLog }: { fromLog: ActivitySelectionFromLog } = activity;
+              const {
+                fromLog = {} as ActivitySelectionFromLog
+              }: { fromLog: ActivitySelectionFromLog } = activity;
               // check if it was clicked or hovered
               const { clicked } = fromLog;
               if (clicked) {
@@ -84,7 +91,8 @@ export class Log extends React.Component<LogProps, LogState> {
               }
             }
           }
-        });
+        }
+      );
     }
     if (props.document.log.entries.length !== state.count) {
       scrollMe.scrollTop = scrollMe.scrollHeight;
@@ -94,24 +102,26 @@ export class Log extends React.Component<LogProps, LogState> {
     }
   }
 
-  componentWillUnmount(): void {
+  public componentWillUnmount(): void {
     // clean up activity subscription
     if (this.selectedActivitySubscription) {
       this.selectedActivitySubscription.unsubscribe();
     }
   }
 
-  render() {
+  public render() {
     let key = 0;
     return (
-      <div className={ styles.log } ref={ ref => this.scrollMe = ref }>
-        {
-          this.props.document.log.entries.map(entry =>
-            <LogEntry key={ `entry-${key++}` } entry={ entry } document={ this.props.document }
-              selectedActivity={ this.selectedActivity }
-              currentlyInspectedActivity={ this.currentlyInspectedActivity } />
-          )
-        }
+      <div className={styles.log} ref={ref => (this.scrollMe = ref)}>
+        {this.props.document.log.entries.map(entry => (
+          <LogEntry
+            key={`entry-${key++}`}
+            entry={entry}
+            document={this.props.document}
+            selectedActivity={this.selectedActivity}
+            currentlyInspectedActivity={this.currentlyInspectedActivity}
+          />
+        ))}
       </div>
     );
   }

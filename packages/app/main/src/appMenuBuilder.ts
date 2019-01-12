@@ -31,15 +31,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { BotInfo, SharedConstants } from '@bfemulator/app-shared';
-import * as Electron from 'electron';
-import { AppUpdater, UpdateStatus } from './appUpdater';
-import { emulator } from './emulator';
-import { mainWindow } from './main';
-import { ConversationService } from './services/conversationService';
-import { rememberTheme } from './settingsData/actions/windowStateActions';
-import { getStore as getSettingsStore } from './settingsData/store';
-import { getActiveBot } from './botHelpers';
+import { BotInfo, SharedConstants } from "@bfemulator/app-shared";
+import * as Electron from "electron";
+
+import { AppUpdater, UpdateStatus } from "./appUpdater";
+import { getActiveBot } from "./botHelpers";
+import { emulator } from "./emulator";
+import { mainWindow } from "./main";
+import { ConversationService } from "./services/conversationService";
+import { rememberTheme } from "./settingsData/actions/windowStateActions";
+import { getStore as getSettingsStore } from "./settingsData/store";
 
 declare type MenuOpts = Electron.MenuItemConstructorOptions;
 
@@ -47,7 +48,7 @@ export class AppMenuBuilder {
   public static get sendActivityMenuItems(): Electron.MenuItem[] {
     const menu = Electron.Menu.getApplicationMenu();
     if (menu) {
-      const sendActivityMenu = (menu.getMenuItemById('send-activity') as any);
+      const sendActivityMenu = menu.getMenuItemById("send-activity") as any;
       const { submenu = { items: [] } } = sendActivityMenu || {};
       return submenu.items;
     }
@@ -57,7 +58,7 @@ export class AppMenuBuilder {
   public static get recentBotsMenuItems(): Electron.MenuItem[] {
     const menu = Electron.Menu.getApplicationMenu();
     if (menu) {
-      const recentBotsMenu = (menu.getMenuItemById('recent-bots') as any);
+      const recentBotsMenu = menu.getMenuItemById("recent-bots") as any;
       const { submenu = { items: [] } } = recentBotsMenu || {};
       return submenu.items;
     }
@@ -74,11 +75,11 @@ export class AppMenuBuilder {
       await this.initHelpMenu()
     ];
 
-    if (process.platform === 'darwin') {
+    if (process.platform === "darwin") {
       template.unshift(await this.initAppMenuMac());
       // Window menu
       template.splice(4, 0, {
-        label: 'Window',
+        label: "Window",
         submenu: await this.initWindowMenuMac()
       });
     }
@@ -93,16 +94,22 @@ export class AppMenuBuilder {
   public static refreshFileMenu(): void {
     const menu = Electron.Menu.getApplicationMenu();
     if (menu) {
-      const fileMenu = menu.getMenuItemById('file') as any || {};
+      const fileMenu = (menu.getMenuItemById("file") as any) || {};
       if (fileMenu.submenu) {
         // redraw the menu, but preserve the recent bots list
         const recentBotsMenuItems = this.recentBotsMenuItems;
         const recentBotsMenu = new Electron.Menu();
         // must append 1-by-1 due to Electron limitations
-        recentBotsMenuItems.forEach(item => { recentBotsMenu.append(item); });
-        const fileMenuContent = Electron.Menu.buildFromTemplate(this.getUpdatedFileMenuContent(recentBotsMenu));
+        recentBotsMenuItems.forEach(item => {
+          recentBotsMenu.append(item);
+        });
+        const fileMenuContent = Electron.Menu.buildFromTemplate(
+          this.getUpdatedFileMenuContent(recentBotsMenu)
+        );
         fileMenu.submenu.clear();
-        fileMenuContent.items.forEach(item => { fileMenu.submenu.append(item); });
+        fileMenuContent.items.forEach(item => {
+          fileMenu.submenu.append(item);
+        });
       }
     }
   }
@@ -111,8 +118,12 @@ export class AppMenuBuilder {
   public static updateRecentBotsList(updatedBots: BotInfo[] = []): void {
     const menu = Electron.Menu.getApplicationMenu();
     if (menu) {
-      const recentBotsMenu = (menu.getMenuItemById('recent-bots') as any);
-      if (recentBotsMenu && recentBotsMenu.submenu && recentBotsMenu.submenu.items) {
+      const recentBotsMenu = menu.getMenuItemById("recent-bots") as any;
+      if (
+        recentBotsMenu &&
+        recentBotsMenu.submenu &&
+        recentBotsMenu.submenu.items
+      ) {
         const recentBots = this.getRecentBotsList(updatedBots);
         // we have to reconstruct the menu due to Electron menu item limitations
         recentBotsMenu.submenu.clear();
@@ -127,16 +138,23 @@ export class AppMenuBuilder {
     const menu = Electron.Menu.getApplicationMenu();
     if (menu) {
       const { status } = AppUpdater;
-      const { Idle, UpdateAvailable, UpdateDownloading, UpdateReadyToInstall } = UpdateStatus;
-      const updateRestartItem = menu.getMenuItemById('auto-update-restart');
+      const {
+        Idle,
+        UpdateAvailable,
+        UpdateDownloading,
+        UpdateReadyToInstall
+      } = UpdateStatus;
+      const updateRestartItem = menu.getMenuItemById("auto-update-restart");
       if (updateRestartItem) {
         updateRestartItem.visible = status === UpdateReadyToInstall;
       }
-      const updateCheckItem = menu.getMenuItemById('auto-update-check');
+      const updateCheckItem = menu.getMenuItemById("auto-update-check");
       if (updateCheckItem) {
         updateCheckItem.visible = status === Idle || status === UpdateAvailable;
       }
-      const updateDownloadingItem = menu.getMenuItemById('auto-update-downloading');
+      const updateDownloadingItem = menu.getMenuItemById(
+        "auto-update-downloading"
+      );
       if (updateDownloadingItem) {
         updateDownloadingItem.visible = status === UpdateDownloading;
       }
@@ -146,61 +164,79 @@ export class AppMenuBuilder {
   /** Creates a file menu item for each bot that will set the bot as active when clicked */
   private static getRecentBotsList(bots: BotInfo[] = []): Electron.MenuItem[] {
     // only list 9 most-recent bots
-    return bots.filter(Boolean).slice(0, 9).map(bot => new Electron.MenuItem({
-      label: bot.displayName,
-      click: () => {
-        mainWindow.commandService.remoteCall(SharedConstants.Commands.Bot.Switch, bot.path)
-          .catch(err => console.error('Error while switching bots from file menu recent bots list: ', err));
-      }
-    }));
+    return bots
+      .filter(Boolean)
+      .slice(0, 9)
+      .map(
+        bot =>
+          new Electron.MenuItem({
+            label: bot.displayName,
+            click: () => {
+              mainWindow.commandService
+                .remoteCall(SharedConstants.Commands.Bot.Switch, bot.path)
+                .catch(err =>
+                  console.error(
+                    "Error while switching bots from file menu recent bots list: ",
+                    err
+                  )
+                );
+            }
+          })
+      );
   }
 
   /** Returns the template to construct a file menu that reflects updated state */
-  private static getUpdatedFileMenuContent(recentBotsMenu: Electron.Menu = new Electron.Menu()): MenuOpts[] {
+  private static getUpdatedFileMenuContent(
+    recentBotsMenu: Electron.Menu = new Electron.Menu()
+  ): MenuOpts[] {
     const { Azure, UI, Bot, Emulator } = SharedConstants.Commands;
 
     // TODO - localization
     const subMenu: MenuOpts[] = [
       {
-        label: 'New Bot Configuration...',
+        label: "New Bot Configuration...",
         click: () => {
           mainWindow.commandService.remoteCall(UI.ShowBotCreationDialog);
         }
       },
-      { type: 'separator' },
+      { type: "separator" },
       {
-        label: 'Open Bot Configuration...',
+        label: "Open Bot Configuration...",
         click: () => {
           mainWindow.commandService.remoteCall(Bot.OpenBrowse);
         }
       },
       {
-        id: 'recent-bots',
-        label: 'Open Recent...',
+        id: "recent-bots",
+        label: "Open Recent...",
         enabled: !!recentBotsMenu.items.length,
         submenu: recentBotsMenu
       },
-      { type: 'separator' },
+      { type: "separator" },
       {
-        label: 'Open Transcript...',
+        label: "Open Transcript...",
         click: async () => {
           try {
-            mainWindow.commandService.remoteCall(Emulator.PromptToOpenTranscript);
+            mainWindow.commandService.remoteCall(
+              Emulator.PromptToOpenTranscript
+            );
           } catch (err) {
-            console.error('Error opening transcript file from menu: ', err);
+            console.error("Error opening transcript file from menu: ", err);
           }
         }
       },
-      { type: 'separator' }
+      { type: "separator" }
     ];
 
     const activeBot = getActiveBot();
 
     subMenu.push({
-      label: 'Close Tab',
+      label: "Close Tab",
       click: async () => {
         await mainWindow.commandService.remoteCall(Bot.Close);
-        await mainWindow.commandService.call(SharedConstants.Commands.Electron.UpdateFileMenu);
+        await mainWindow.commandService.call(
+          SharedConstants.Commands.Electron.UpdateFileMenu
+        );
       },
       enabled: activeBot !== null
     });
@@ -208,15 +244,19 @@ export class AppMenuBuilder {
     const settingsStore = getSettingsStore();
     const settingsState = settingsStore.getState();
     const { signedInUser } = settingsState.azure;
-    const azureMenuItemLabel = signedInUser ? `Sign out (${signedInUser})` : 'Sign in with Azure';
+    const azureMenuItemLabel = signedInUser
+      ? `Sign out (${signedInUser})`
+      : "Sign in with Azure";
 
-    subMenu.push({ type: 'separator' });
+    subMenu.push({ type: "separator" });
     subMenu.push({
       label: azureMenuItemLabel,
       click: async () => {
         if (signedInUser) {
           await mainWindow.commandService.call(Azure.SignUserOutOfAzure);
-          await mainWindow.commandService.remoteCall(UI.InvalidateAzureArmToken);
+          await mainWindow.commandService.remoteCall(
+            UI.InvalidateAzureArmToken
+          );
         } else {
           await mainWindow.commandService.remoteCall(UI.SignInToAzure);
         }
@@ -226,29 +266,34 @@ export class AppMenuBuilder {
     const { availableThemes, theme } = settingsState.windowState;
 
     subMenu.push.apply(subMenu, [
-      { type: 'separator' },
+      { type: "separator" },
       {
-        label: 'Themes',
+        label: "Themes",
         submenu: availableThemes.map(t => ({
           label: t.name,
-          type: 'checkbox',
+          type: "checkbox",
           checked: theme === t.name,
           click: async () => {
             settingsStore.dispatch(rememberTheme(t.name));
 
-            await mainWindow.commandService.call(SharedConstants.Commands.Electron.UpdateFileMenu);
+            await mainWindow.commandService.call(
+              SharedConstants.Commands.Electron.UpdateFileMenu
+            );
           }
         }))
       }
     ]);
-    subMenu.push({ type: 'separator' });
-    subMenu.push({ role: 'quit' });
+    subMenu.push({ type: "separator" });
+    subMenu.push({ role: "quit" });
 
     return subMenu;
   }
 
   private static async initConversationMenu(): Promise<MenuOpts> {
-    const getState = () => mainWindow.commandService.remoteCall(SharedConstants.Commands.Misc.GetStoreState);
+    const getState = () =>
+      mainWindow.commandService.remoteCall(
+        SharedConstants.Commands.Misc.GetStoreState
+      );
 
     const getConversationId = async () => {
       const state = await getState();
@@ -269,60 +314,63 @@ export class AppMenuBuilder {
       }
     };
 
-    const getServiceUrl = () => emulator.framework.serverUrl.replace('[::]', 'localhost');
+    const getServiceUrl = () =>
+      emulator.framework.serverUrl.replace("[::]", "localhost");
     const createClickHandler = serviceFunction => async () => {
       const conversationId = await getConversationId();
 
       return serviceFunction(getServiceUrl(), conversationId);
     };
 
-    const enabled = await getActiveDocumentContentType() === SharedConstants.ContentTypes.CONTENT_TYPE_LIVE_CHAT;
-    
+    const enabled =
+      (await getActiveDocumentContentType()) ===
+      SharedConstants.ContentTypes.CONTENT_TYPE_LIVE_CHAT;
+
     return {
-      id: 'conversation',
-      label: 'Conversation',
+      id: "conversation",
+      label: "Conversation",
       submenu: [
         {
-          id: 'send-activity',
-          label: 'Send System Activity',
+          id: "send-activity",
+          label: "Send System Activity",
           submenu: [
             {
-              label: 'conversationUpdate ( user added )',
+              label: "conversationUpdate ( user added )",
               click: createClickHandler(ConversationService.addUser),
               enabled
             },
             {
-              label: 'conversationUpdate ( user removed )',
+              label: "conversationUpdate ( user removed )",
               click: createClickHandler(ConversationService.removeUser),
               enabled
             },
             {
-              label: 'contactRelationUpdate ( bot added )',
+              label: "contactRelationUpdate ( bot added )",
               click: createClickHandler(ConversationService.botContactAdded),
               enabled
             },
             {
-              label: 'contactRelationUpdate ( bot removed )',
+              label: "contactRelationUpdate ( bot removed )",
               click: createClickHandler(ConversationService.botContactRemoved),
               enabled
             },
             {
-              label: 'typing',
+              label: "typing",
               click: createClickHandler(ConversationService.typing),
               enabled
             },
             {
-              label: 'ping',
+              label: "ping",
               click: createClickHandler(ConversationService.ping),
               enabled
             },
             {
-              label: 'deleteUserData',
+              label: "deleteUserData",
               click: createClickHandler(ConversationService.deleteUserData),
               enabled
             }
           ]
-        },
+        }
       ]
     };
   }
@@ -331,30 +379,30 @@ export class AppMenuBuilder {
     return {
       label: Electron.app.getName(),
       submenu: [
-        { role: 'about' },
-        { type: 'separator' },
-        { role: 'services', submenu: [] },
-        { type: 'separator' },
-        { role: 'hide' },
-        { role: 'hideothers' },
-        { role: 'unhide' },
-        { type: 'separator' },
-        { role: 'quit' }
+        { role: "about" },
+        { type: "separator" },
+        { role: "services", submenu: [] },
+        { type: "separator" },
+        { role: "hide" },
+        { role: "hideothers" },
+        { role: "unhide" },
+        { type: "separator" },
+        { role: "quit" }
       ]
     };
   }
 
   private static async initEditMenu(): Promise<MenuOpts> {
     return {
-      label: 'Edit',
+      label: "Edit",
       submenu: [
-        { role: 'undo' },
-        { role: 'redo' },
-        { type: 'separator' },
-        { role: 'cut' },
-        { role: 'copy' },
-        { role: 'paste' },
-        { role: 'delete' }
+        { role: "undo" },
+        { role: "redo" },
+        { type: "separator" },
+        { role: "cut" },
+        { role: "copy" },
+        { role: "paste" },
+        { role: "delete" }
       ].filter(item => item) as any[]
     };
   }
@@ -362,8 +410,8 @@ export class AppMenuBuilder {
   /** Initializes the file menu */
   private static initFileMenu(): MenuOpts {
     const template: MenuOpts = {
-      id: 'file',
-      label: 'File',
+      id: "file",
+      label: "File",
       submenu: this.getUpdatedFileMenuContent()
     };
 
@@ -373,94 +421,109 @@ export class AppMenuBuilder {
   private static async initViewMenu(): Promise<MenuOpts> {
     // TODO - localization
     return {
-      label: 'View',
+      label: "View",
       submenu: [
-        { role: 'resetzoom', label: 'Reset Zoom' },
-        { role: 'zoomin' },
-        { role: 'zoomout' },
-        { type: 'separator' },
-        { role: 'togglefullscreen' }
+        { role: "resetzoom", label: "Reset Zoom" },
+        { role: "zoomin" },
+        { role: "zoomout" },
+        { type: "separator" },
+        { role: "togglefullscreen" }
       ]
     };
   }
 
   private static async initWindowMenuMac(): Promise<MenuOpts[]> {
     return [
-      { role: 'close' },
-      { role: 'minimize' },
-      { role: 'zoom' },
-      { type: 'separator' },
-      { role: 'front' }
+      { role: "close" },
+      { role: "minimize" },
+      { role: "zoom" },
+      { type: "separator" },
+      { role: "front" }
     ];
   }
 
   private static async initHelpMenu(): Promise<MenuOpts> {
     const appName = Electron.app.getName();
     const version = Electron.app.getVersion();
-    
+
     // TODO - localization
     return {
-      role: 'help',
+      role: "help",
       submenu: [
         {
-          label: 'Welcome',
-          click: () => mainWindow.commandService.remoteCall(SharedConstants.Commands.UI.ShowWelcomePage)
-        },
-        { type: 'separator' },
-        {
-          label: 'Privacy',
+          label: "Welcome",
           click: () =>
-            Electron.shell.openExternal('https://go.microsoft.com/fwlink/?LinkId=512132', { activate: true })
+            mainWindow.commandService.remoteCall(
+              SharedConstants.Commands.UI.ShowWelcomePage
+            )
+        },
+        { type: "separator" },
+        {
+          label: "Privacy",
+          click: () =>
+            Electron.shell.openExternal(
+              "https://go.microsoft.com/fwlink/?LinkId=512132",
+              { activate: true }
+            )
         },
         {
           // TODO: Proper link for the license instead of third party credits
-          label: 'License',
-          click: () => 
-            Electron.shell.openExternal('https://aka.ms/O10ww2', { activate: true })  
+          label: "License",
+          click: () =>
+            Electron.shell.openExternal("https://aka.ms/O10ww2", {
+              activate: true
+            })
         },
         {
-          label: 'Credits',
-          click: () => 
-            Electron.shell.openExternal('https://aka.ms/Ud5ga6', { activate: true })
+          label: "Credits",
+          click: () =>
+            Electron.shell.openExternal("https://aka.ms/Ud5ga6", {
+              activate: true
+            })
         },
-        { type: 'separator' },
+        { type: "separator" },
         {
-          label: 'Report an issue',
-          click: () => 
-            Electron.shell.openExternal('https://aka.ms/cy106f', { activate: true })
+          label: "Report an issue",
+          click: () =>
+            Electron.shell.openExternal("https://aka.ms/cy106f", {
+              activate: true
+            })
         },
-        { type: 'separator' },
+        { type: "separator" },
 
         // will toggle visibility of auto update menu item states as workaround to non-dynamic labels in Electron
         {
-          id: 'auto-update-restart',
-          label: 'Restart to Update...',
+          id: "auto-update-restart",
+          label: "Restart to Update...",
           click: () => AppUpdater.quitAndInstall(),
           enabled: true,
           visible: AppUpdater.status === UpdateStatus.UpdateReadyToInstall
         },
         {
-          id: 'auto-update-downloading',
+          id: "auto-update-downloading",
           label: `Update downloading...`,
           enabled: false,
           visible: AppUpdater.status === UpdateStatus.UpdateDownloading
         },
         {
-          id: 'auto-update-check',
-          label: 'Check for Update...',
+          id: "auto-update-check",
+          label: "Check for Update...",
           click: () => AppUpdater.checkForUpdates(true),
           enabled: true,
-          visible: AppUpdater.status === UpdateStatus.Idle || AppUpdater.status === UpdateStatus.UpdateAvailable
+          visible:
+            AppUpdater.status === UpdateStatus.Idle ||
+            AppUpdater.status === UpdateStatus.UpdateAvailable
         },
-        { type: 'separator' },
+        { type: "separator" },
         {
-          label: 'About',
-          click: () => Electron.dialog.showMessageBox(mainWindow.browserWindow, {
-            type: 'info',
-            title: appName,
-            message: appName + '\r\nversion: ' + version,
-            buttons: ['Dismiss']
-          })
+          label: "About",
+          click: () =>
+            Electron.dialog.showMessageBox(mainWindow.browserWindow, {
+              type: "info",
+              title: appName,
+              message: appName + "\r\nversion: " + version,
+              buttons: ["Dismiss"]
+            })
         }
       ]
     };

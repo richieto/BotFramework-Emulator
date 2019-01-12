@@ -30,11 +30,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import * as React from 'react';
-import * as styles from './chatPanel.scss';
+import * as React from "react";
 
-import { ChatContainer } from '../parts/chat/chatContainer';
-import { EmulatorMode } from '../emulator';
+import { EmulatorMode } from "../emulator";
+import { ChatContainer } from "../parts/chat/chatContainer";
+
+import * as styles from "./chatPanel.scss";
 
 interface ChatPanelProps {
   document: any;
@@ -44,15 +45,17 @@ interface ChatPanelProps {
 }
 
 export default class ChatPanel extends React.Component<ChatPanelProps, {}> {
-
-  render() {
-    const { endpointUrl } = this.props.document || { endpointUrl: '' };
+  public render() {
+    const { endpointUrl } = this.props.document || { endpointUrl: "" };
 
     return (
-      <div className={ `${styles.chatPanel} ${this.props.className || ''}` }>
-        <header>{ endpointUrl }</header>
-        <ChatContainer mode={ this.props.mode } document={ this.props.document }
-                       onStartConversation={ this.props.onStartConversation }/>
+      <div className={`${styles.chatPanel} ${this.props.className || ""}`}>
+        <header>{endpointUrl}</header>
+        <ChatContainer
+          mode={this.props.mode}
+          document={this.props.document}
+          onStartConversation={this.props.onStartConversation}
+        />
       </div>
     );
   }
