@@ -50,7 +50,7 @@ class CreateConversationError {
 Object.freeze(CreateConversationError);
 
 function validateCreateConversationRequest(params: ConversationParameters, endpoint: BotEndpoint, userId: string)
-  : CreateConversationError {
+  : CreateConversationError | void {
   if (!params.members) {
     return CreateConversationError.MEMBERS_MISSING;
   }
