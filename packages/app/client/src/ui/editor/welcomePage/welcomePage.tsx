@@ -31,20 +31,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { BotInfo } from "@bfemulator/app-shared";
+import { BotInfo } from '@bfemulator/app-shared';
 import {
   Column,
   LargeHeader,
   PrimaryButton,
   Row,
   SmallHeader,
-  TruncateText
-} from "@bfemulator/ui-react";
-import * as React from "react";
+  TruncateText,
+} from '@bfemulator/ui-react';
+import * as React from 'react';
 
-import { GenericDocument } from "../../layout";
+import { GenericDocument } from '../../layout';
 
-import * as styles from "./welcomePage.scss";
+import * as styles from './welcomePage.scss';
 
 export interface WelcomePageProps {
   accessToken?: string;
@@ -69,7 +69,7 @@ export class WelcomePage extends React.Component<WelcomePageProps, {}> {
       startSection,
       myBotsSection,
       howToBuildSection,
-      signInSection
+      signInSection,
     } = this;
 
     return (
@@ -196,7 +196,7 @@ export class WelcomePage extends React.Component<WelcomePageProps, {}> {
 
     return (
       <div>
-        {accessToken && !accessToken.startsWith("invalid") ? (
+        {accessToken && !accessToken.startsWith('invalid') ? (
           <button className={styles.ctaLink} onClick={signOutWithAzure}>
             Sign out
           </button>
@@ -227,7 +227,7 @@ export class WelcomePage extends React.Component<WelcomePageProps, {}> {
                   href="https://aka.ms/bot-framework-emulator-design-guidelines"
                 >
                   design guidelines
-                </a>{" "}
+                </a>{' '}
                 for best practices&nbsp;
               </dd>
             </dl>
@@ -252,7 +252,7 @@ export class WelcomePage extends React.Component<WelcomePageProps, {}> {
                   href="https://aka.ms/bot-framework-emulator-create-bot-azure"
                 >
                   from Azure
-                </a>{" "}
+                </a>{' '}
                 or&nbsp;
                 <a
                   className={styles.ctaLink}
@@ -299,7 +299,7 @@ export class WelcomePage extends React.Component<WelcomePageProps, {}> {
                   href="https://aka.ms/bot-framework-emulator-debug-with-emulator"
                 >
                   Emulator
-                </a>{" "}
+                </a>{' '}
                 <br />
                 Test online in&nbsp;
                 <a

@@ -31,13 +31,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import * as React from "react";
-import { ComponentClass, StatelessComponent } from "react";
-import * as ReactDOM from "react-dom";
-import { Provider } from "react-redux";
+import * as React from 'react';
+import { ComponentClass, StatelessComponent } from 'react';
+import * as ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 
-import * as DialogActions from "../../../data/action/dialogActions";
-import { store } from "../../../data/store";
+import * as DialogActions from '../../../data/action/dialogActions';
+import { store } from '../../../data/store';
 
 export interface DialogService {
   showDialog(
@@ -50,7 +50,7 @@ export interface DialogService {
   setHost(hostElement: HTMLElement): void;
 }
 
-export const DialogService = new class implements DialogService {
+class DialogServiceImpl implements DialogService {
   private _hostElement: HTMLElement;
   private _dialogReturnValue: Promise<any>;
   private _resolve: (value?: any) => void;
@@ -99,7 +99,9 @@ export const DialogService = new class implements DialogService {
   /** Notifies the dialog host that the shown dialog has finished rendering */
   private notifyHostOfRender = (): void => {
     if (this._hostElement) {
-      this._hostElement.dispatchEvent(new Event("dialogRendered"));
+      this._hostElement.dispatchEvent(new Event('dialogRendered'));
     }
   };
-}();
+}
+
+export const DialogService = new DialogServiceImpl();

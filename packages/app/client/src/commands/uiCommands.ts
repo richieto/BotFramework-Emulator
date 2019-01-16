@@ -31,26 +31,26 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { SharedConstants } from "@bfemulator/app-shared";
-import { CommandRegistry } from "@bfemulator/sdk-shared";
-import { ServiceTypes } from "botframework-config/lib/schema";
+import { SharedConstants } from '@bfemulator/app-shared';
+import { CommandRegistry } from '@bfemulator/sdk-shared';
+import { ServiceTypes } from 'botframework-config/lib/schema';
 
-import * as Constants from "../constants";
+import * as Constants from '../constants';
 import {
   azureArmTokenDataChanged,
   beginAzureAuthWorkflow,
-  invalidateArmToken
-} from "../data/action/azureAuthActions";
-import * as EditorActions from "../data/action/editorActions";
-import * as NavBarActions from "../data/action/navBarActions";
+  invalidateArmToken,
+} from '../data/action/azureAuthActions';
+import * as EditorActions from '../data/action/editorActions';
+import * as NavBarActions from '../data/action/navBarActions';
 import {
   ProgressIndicatorPayload,
-  updateProgressIndicator
-} from "../data/action/progressIndicatorActions";
-import { switchTheme } from "../data/action/themeActions";
-import { showWelcomePage } from "../data/editorHelpers";
-import { AzureAuthState } from "../data/reducer/azureAuthReducer";
-import { store } from "../data/store";
+  updateProgressIndicator,
+} from '../data/action/progressIndicatorActions';
+import { switchTheme } from '../data/action/themeActions';
+import { showWelcomePage } from '../data/editorHelpers';
+import { AzureAuthState } from '../data/reducer/azureAuthReducer';
+import { store } from '../data/store';
 import {
   AzureLoginFailedDialogContainer,
   AzureLoginPromptDialogContainer,
@@ -61,8 +61,8 @@ import {
   ProgressIndicatorContainer,
   SecretPromptDialogContainer,
   UpdateAvailableDialogContainer,
-  UpdateUnavailableDialogContainer
-} from "../ui/dialogs";
+  UpdateUnavailableDialogContainer,
+} from '../ui/dialogs';
 
 /** Register UI commands (toggling UI) */
 export function registerCommands(commandRegistry: CommandRegistry) {
@@ -106,7 +106,7 @@ export function registerCommands(commandRegistry: CommandRegistry) {
           contentType: CONTENT_TYPE_APP_SETTINGS,
           documentId: DOCUMENT_ID_APP_SETTINGS,
           isGlobal: true,
-          meta: null
+          meta: null,
         })
       );
     }
@@ -120,7 +120,7 @@ export function registerCommands(commandRegistry: CommandRegistry) {
       const linkTags = document.querySelectorAll<HTMLLinkElement>(
         '[data-theme-component="true"]'
       );
-      const themeTag = document.getElementById("themeVars") as HTMLLinkElement;
+      const themeTag = document.getElementById('themeVars') as HTMLLinkElement;
       if (themeTag) {
         themeTag.href = themeHref;
       }
@@ -170,10 +170,10 @@ export function registerCommands(commandRegistry: CommandRegistry) {
   commandRegistry.registerCommand(
     UI.ShowProgressIndicator,
     async (props?: ProgressIndicatorPayload) => {
-      return DialogService.showDialog(
-        ProgressIndicatorContainer,
-        props
-      ).catch(e => console.error(e));
+      return DialogService.showDialog(ProgressIndicatorContainer, props).catch(
+        // eslint-disable-next-line no-console
+        e => console.error(e)
+      );
     }
   );
 
@@ -190,9 +190,10 @@ export function registerCommands(commandRegistry: CommandRegistry) {
   // Shows the dialog telling the user that an update is available
   commandRegistry.registerCommand(
     UI.ShowUpdateAvailableDialog,
-    async (version: string = "") => {
+    async (version: string = '') => {
       return DialogService.showDialog(UpdateAvailableDialogContainer, {
-        version
+        version,
+        // eslint-disable-next-line no-console
       }).catch(e => console.error(e));
     }
   );
@@ -200,8 +201,9 @@ export function registerCommands(commandRegistry: CommandRegistry) {
   // ---------------------------------------------------------------------------
   // Shows the dialog telling the user that an update is unavailable
   commandRegistry.registerCommand(UI.ShowUpdateUnavailableDialog, async () => {
-    return DialogService.showDialog(
-      UpdateUnavailableDialogContainer
-    ).catch(e => console.error(e));
+    return DialogService.showDialog(UpdateUnavailableDialogContainer).catch(e =>
+      // eslint-disable-next-line no-console
+      console.error(e)
+    );
   });
 }

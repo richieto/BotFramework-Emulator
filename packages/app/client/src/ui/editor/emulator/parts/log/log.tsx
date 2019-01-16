@@ -31,12 +31,12 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import * as React from "react";
-import { Subscription } from "rxjs";
+import * as React from 'react';
+import { Subscription } from 'rxjs';
 
-import * as styles from "./log.scss";
-import { ActivitySelectionFromLog } from "./logEntry";
-import { LogEntry } from "./logEntryContainer";
+import * as styles from './log.scss';
+import { ActivitySelectionFromLog } from './logEntry';
+import { LogEntry } from './logEntryContainer';
 
 export interface LogProps {
   document: any;
@@ -55,19 +55,19 @@ export class Log extends React.Component<LogProps, LogState> {
   constructor(props: LogProps, context: LogState) {
     super(props, context);
     this.state = {
-      count: 0
+      count: 0,
     };
   }
 
   public componentDidUpdate(): void {
-    let { props, scrollMe, selectedActivitySubscription, state } = this;
+    const { props, scrollMe, state } = this;
     // set up selected activity subscription once it's available
     if (
       props.document &&
       props.document.selectedActivity$ &&
-      !selectedActivitySubscription
+      !this.selectedActivitySubscription
     ) {
-      selectedActivitySubscription = props.document.selectedActivity$.subscribe(
+      this.selectedActivitySubscription = props.document.selectedActivity$.subscribe(
         obj => {
           if (obj) {
             if (obj.activity) {
@@ -82,7 +82,7 @@ export class Log extends React.Component<LogProps, LogState> {
               const activity = obj;
               this.selectedActivity = activity;
               const {
-                fromLog = {} as ActivitySelectionFromLog
+                fromLog = {} as ActivitySelectionFromLog,
               }: { fromLog: ActivitySelectionFromLog } = activity;
               // check if it was clicked or hovered
               const { clicked } = fromLog;
@@ -97,7 +97,7 @@ export class Log extends React.Component<LogProps, LogState> {
     if (props.document.log.entries.length !== state.count) {
       scrollMe.scrollTop = scrollMe.scrollHeight;
       this.setState({
-        count: props.document.log.entries.length
+        count: props.document.log.entries.length,
       });
     }
   }

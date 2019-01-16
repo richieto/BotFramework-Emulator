@@ -31,16 +31,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { BotInfo, SharedConstants } from "@bfemulator/app-shared";
+import { BotInfo, SharedConstants } from '@bfemulator/app-shared';
 // import { hot } from 'react-hot-loader';
-import { connect } from "react-redux";
-import { Action } from "redux";
+import { connect } from 'react-redux';
+import { Action } from 'redux';
 
-import { openContextMenuForBot } from "../../../data/action/welcomePageActions";
-import { RootState } from "../../../data/store";
-import { CommandServiceImpl } from "../../../platform/commands/commandServiceImpl";
+import { openContextMenuForBot } from '../../../data/action/welcomePageActions';
+import { RootState } from '../../../data/store';
+import { CommandServiceImpl } from '../../../platform/commands/commandServiceImpl';
 
-import { WelcomePage, WelcomePageProps } from "./welcomePage";
+import { WelcomePage, WelcomePageProps } from './welcomePage';
 
 function mapStateToProps(
   state: RootState,
@@ -49,7 +49,7 @@ function mapStateToProps(
   return {
     ...ownProps,
     accessToken: state.azureAuth.access_token,
-    recentBots: state.bot.botFiles
+    recentBots: state.bot.botFiles,
   };
 }
 
@@ -81,7 +81,7 @@ function mapDispatchToProps(
       CommandServiceImpl.call(Commands.UI.InvalidateAzureArmToken).catch();
     },
     showContextMenuForBot: (bot: BotInfo): void =>
-      dispatch(openContextMenuForBot(bot))
+      dispatch(openContextMenuForBot(bot)),
   };
 }
 

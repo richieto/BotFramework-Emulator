@@ -30,19 +30,21 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import { IEndpointService } from "botframework-config/lib/schema";
-import { Chat as WebChat, Speech } from "botframework-webchat";
-import * as React from "react";
-import { Component } from "react";
+import { IEndpointService } from 'botframework-config/lib/schema';
+import { Chat as WebChat, Speech } from 'botframework-webchat';
+import * as React from 'react';
+import { Component } from 'react';
 
-import { CommandServiceImpl } from "../../../../../platform/commands/commandServiceImpl";
-import memoize from "../../../../helpers/memoize";
-import { EmulatorMode } from "../../emulator";
+import { CommandServiceImpl } from '../../../../../platform/commands/commandServiceImpl';
+import memoize from '../../../../helpers/memoize';
+import { EmulatorMode } from '../../emulator';
 
-import * as styles from "./chat.scss";
+import * as styles from './chat.scss';
 
-const CognitiveServices = require("botframework-webchat/CognitiveServices");
-const AdaptiveCardsHostConfig = require("botframework-webchat/adaptivecards-hostconfig.json");
+/* eslint-disable typescript/no-var-requires */
+const CognitiveServices = require('botframework-webchat/CognitiveServices');
+const AdaptiveCardsHostConfig = require('botframework-webchat/adaptivecards-hostconfig.json');
+/* eslint-enable typescript/no-var-requires */
 
 export interface ChatProps {
   document: any;
@@ -64,27 +66,27 @@ function createWebChatProps(
   return {
     adaptiveCardsHostConfig: AdaptiveCardsHostConfig,
     bot: {
-      id: botId || "bot",
-      name: "Bot"
+      id: botId || 'bot',
+      name: 'Bot',
     },
     botConnection: directLine,
     chatTitle: false,
     selectedActivity: selectedActivity$,
-    showShell: mode === "livechat",
+    showShell: mode === 'livechat',
     speechOptions:
       endpoint && endpoint.appId && endpoint.appPassword
         ? {
             speechRecognizer: new CognitiveServices.SpeechRecognizer({
               fetchCallback: getSpeechToken.bind(null, endpoint, false),
-              fetchOnExpiryCallback: getSpeechToken.bind(null, endpoint, true)
+              fetchOnExpiryCallback: getSpeechToken.bind(null, endpoint, true),
             }),
-            speechSynthesizer: new Speech.BrowserSpeechSynthesizer()
+            speechSynthesizer: new Speech.BrowserSpeechSynthesizer(),
           }
         : null,
     user: {
       id: userId,
-      name: "User"
-    }
+      name: 'User',
+    },
   };
 }
 
@@ -93,15 +95,17 @@ export async function getSpeechToken(
   refresh: boolean
 ): Promise<string | void> {
   if (!endpoint) {
-    console.warn("No endpoint for this chat, cannot fetch speech token.");
+    // eslint-disable-next-line no-console
+    console.warn('No endpoint for this chat, cannot fetch speech token.');
     return;
   }
 
-  const command = refresh ? "speech-token:refresh" : "speech-token:get";
+  const command = refresh ? 'speech-token:refresh' : 'speech-token:get';
 
   try {
     return await CommandServiceImpl.remoteCall(command, endpoint.id);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
   }
 }

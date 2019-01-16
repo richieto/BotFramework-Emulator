@@ -31,20 +31,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 
-import * as BotActions from "../../../../data/action/botActions";
+import * as BotActions from '../../../../data/action/botActions';
 
 import {
   BotNotOpenExplorer as BotNotOpenExplorerComp,
-  BotNotOpenExplorerProps
-} from "./botNotOpenExplorer";
+  BotNotOpenExplorerProps,
+} from './botNotOpenExplorer';
 
 const mapStateToProps = (): any => ({});
 const mapDispatchToProps = (dispatch): BotNotOpenExplorerProps => ({
   onOpenBotClick: () => {
     dispatch(BotActions.browse());
-  }
+  },
 });
 
 export const BotNotOpenExplorer = connect(

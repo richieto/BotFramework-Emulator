@@ -31,14 +31,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import LogEntryModel from "@bfemulator/emulator-core/lib/types/log/entry";
-import { ILogItem } from "@bfemulator/emulator-core/lib/types/log/item";
-import LogLevel from "@bfemulator/emulator-core/lib/types/log/level";
-import * as React from "react";
+import LogEntryModel from '@bfemulator/emulator-core/lib/types/log/entry';
+import { ILogItem } from '@bfemulator/emulator-core/lib/types/log/item';
+import LogLevel from '@bfemulator/emulator-core/lib/types/log/level';
+import * as React from 'react';
 
-import { ExtensionManager, InspectorAPI } from "../../../../../extensions";
+import { ExtensionManager, InspectorAPI } from '../../../../../extensions';
 
-import * as styles from "./log.scss";
+import * as styles from './log.scss';
 
 /** One of these will always be "nexted" to the selectedActivity$
  *  subscription when called from within the log
@@ -100,7 +100,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
         const fromLog: ActivitySelectionFromLog = { clicked: true };
         this.props.document.selectedActivity$.next({
           ...currentlyInspectedActivity,
-          fromLog
+          fromLog,
         });
       } else {
         const fromLog: ActivitySelectionFromLog = { clicked: false };
@@ -119,7 +119,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
       <>
         {this.renderTimestamp(this.props.entry.timestamp)}
         {this.props.entry.items.map((item, key) =>
-          this.renderItem(item, "" + key)
+          this.renderItem(item, '' + key)
         )}
       </>
     );
@@ -127,7 +127,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
     // if the currently inspected activity matches any of this item's inner inspectable
     // objects, append an 'inspected' class name to the log entry to highlight it
     const { currentlyInspectedActivity } = this.props;
-    let inspectedActivityClass = "";
+    let inspectedActivityClass = '';
     if (currentlyInspectedActivity && currentlyInspectedActivity.id) {
       if (this.inspectableObjects[currentlyInspectedActivity.id]) {
         inspectedActivityClass = styles.inspected;
@@ -137,7 +137,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
     return (
       <div
         key="entry"
-        className={[styles.entry, inspectedActivityClass].join(" ")}
+        className={[styles.entry, inspectedActivityClass].join(' ')}
       >
         {innerJsx}
       </div>
@@ -146,7 +146,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
 
   public renderTimestamp(t: number) {
     return (
-      <span key="timestamp" className={"timestamp " + styles.spaced}>
+      <span key="timestamp" className={'timestamp ' + styles.spaced}>
         [<span className={styles.timestamp}>{timestamp(t)}</span>]
       </span>
     );
@@ -154,27 +154,27 @@ export class LogEntry extends React.Component<LogEntryProps> {
 
   public renderItem(item: ILogItem, key: string) {
     switch (item.type) {
-      case "text": {
+      case 'text': {
         const { level, text } = item.payload;
         return this.renderTextItem(level, text, key);
       }
-      case "external-link": {
+      case 'external-link': {
         const { text, hyperlink } = item.payload;
         return this.renderExternalLinkItem(text, hyperlink, key);
       }
-      case "open-app-settings": {
+      case 'open-app-settings': {
         const { text } = item.payload;
         return this.renderAppSettingsItem(text, key);
       }
-      case "exception": {
+      case 'exception': {
         const { err } = item.payload;
         return this.renderExceptionItem(err, key);
       }
-      case "inspectable-object": {
+      case 'inspectable-object': {
         const { obj } = item.payload;
         return this.renderInspectableItem(obj, key);
       }
-      case "network-request": {
+      case 'network-request': {
         const { facility, body, headers, method, url } = item.payload;
         return this.renderNetworkRequestItem(
           facility,
@@ -185,13 +185,13 @@ export class LogEntry extends React.Component<LogEntryProps> {
           key
         );
       }
-      case "network-response": {
+      case 'network-response': {
         const {
           body,
           headers,
           statusCode,
           statusMessage,
-          srcUrl
+          srcUrl,
         } = item.payload;
         return this.renderNetworkResponseItem(
           body,
@@ -202,7 +202,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
           key
         );
       }
-      case "ngrok-expiration": {
+      case 'ngrok-expiration': {
         const { text } = item.payload;
         return this.renderNgrokExpirationItem(text, key);
       }
@@ -227,7 +227,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
       <span key={key} className={styles.spaced}>
         <button
           className={styles.link}
-          onClick={() => window.open(hyperlink, "_blank")}
+          onClick={() => window.open(hyperlink, '_blank')}
         >
           {text}
         </button>
@@ -251,7 +251,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
   public renderExceptionItem(err: Error, key: string) {
     return (
       <span key={key} className={`${styles.spaced} ${styles.level3}`}>
-        {err && err.message ? err.message : ""}
+        {err && err.message ? err.message : ''}
       </span>
     );
   }
@@ -262,11 +262,11 @@ export class LogEntry extends React.Component<LogEntryProps> {
       this.inspectableObjects[obj.id] = true;
     }
 
-    let title = "inspect";
-    if (typeof obj.type === "string") {
+    let title = 'inspect';
+    if (typeof obj.type === 'string') {
       title = obj.type;
     }
-    const summaryText = this.summaryText(obj) || "";
+    const summaryText = this.summaryText(obj) || '';
     return (
       <span
         key={key}
@@ -297,7 +297,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
     key: string
   ) {
     let obj;
-    if (typeof body === "string") {
+    if (typeof body === 'string') {
       try {
         obj = JSON.parse(body);
       } catch (e) {
@@ -332,7 +332,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
     key: string
   ) {
     let obj;
-    if (typeof body === "string") {
+    if (typeof body === 'string') {
       try {
         obj = JSON.parse(body);
       } catch (e) {
@@ -361,7 +361,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
   public renderNgrokExpirationItem(text: string, key: string): JSX.Element {
     return (
       <span key={key} className={`${styles.spaced} ${styles.level3}`}>
-        {text + " "}
+        {text + ' '}
         <button
           className={styles.link}
           onClick={() => this.props.reconnectNgrok()}
@@ -383,7 +383,7 @@ export class LogEntry extends React.Component<LogEntryProps> {
 }
 
 export function number2(n: number) {
-  return ("0" + n).slice(-2);
+  return ('0' + n).slice(-2);
 }
 
 export function timestamp(t: number) {
@@ -405,6 +405,6 @@ function logLevelToClassName(level: LogLevel): string {
     case LogLevel.Error:
       return styles.level3;
     default:
-      return "";
+      return '';
   }
 }

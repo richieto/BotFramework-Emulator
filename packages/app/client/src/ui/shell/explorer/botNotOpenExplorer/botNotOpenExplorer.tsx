@@ -34,11 +34,11 @@
 import {
   ExpandCollapse,
   ExpandCollapseContent,
-  PrimaryButton
-} from "@bfemulator/ui-react";
-import * as React from "react";
+  PrimaryButton,
+} from '@bfemulator/ui-react';
+import * as React from 'react';
 
-import * as styles from "./botNotOpenExplorer.scss";
+import * as styles from './botNotOpenExplorer.scss';
 
 export interface BotNotOpenExplorerProps {
   onOpenBotClick: () => any;
@@ -69,7 +69,7 @@ export class BotNotOpenExplorer extends React.Component<
                   You have not yet opened a bot.
                 </span>
                 <PrimaryButton
-                  text={"Open Bot"}
+                  text={'Open Bot'}
                   className={styles.openBot}
                   onClick={onOpenBotClick}
                 />

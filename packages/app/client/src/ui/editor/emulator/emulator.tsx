@@ -34,41 +34,41 @@
 import {
   newNotification,
   Notification,
-  SharedConstants
-} from "@bfemulator/app-shared";
-import { uniqueId, uniqueIdv4 } from "@bfemulator/sdk-shared";
-import { SplitButton, Splitter } from "@bfemulator/ui-react";
-import base64Url from "base64url";
-import { IEndpointService } from "botframework-config/lib/schema";
-import * as BotChat from "botframework-webchat";
-import * as React from "react";
-import { connect } from "react-redux";
-import { BehaviorSubject } from "rxjs";
+  SharedConstants,
+} from '@bfemulator/app-shared';
+import { uniqueId, uniqueIdv4 } from '@bfemulator/sdk-shared';
+import { SplitButton, Splitter } from '@bfemulator/ui-react';
+import base64Url from 'base64url';
+import { IEndpointService } from 'botframework-config/lib/schema';
+import * as BotChat from 'botframework-webchat';
+import * as React from 'react';
+import { connect } from 'react-redux';
+import { BehaviorSubject } from 'rxjs';
 
-import * as ChatActions from "../../../data/action/chatActions";
-import { updateDocument } from "../../../data/action/editorActions";
-import { beginAdd } from "../../../data/action/notificationActions";
-import * as PresentationActions from "../../../data/action/presentationActions";
-import { Document } from "../../../data/reducer/editor";
-import { RootState } from "../../../data/store";
-import { CommandServiceImpl } from "../../../platform/commands/commandServiceImpl";
-import { debounce } from "../../../utils";
+import * as ChatActions from '../../../data/action/chatActions';
+import { updateDocument } from '../../../data/action/editorActions';
+import { beginAdd } from '../../../data/action/notificationActions';
+import * as PresentationActions from '../../../data/action/presentationActions';
+import { Document } from '../../../data/reducer/editor';
+import { RootState } from '../../../data/store';
+import { CommandServiceImpl } from '../../../platform/commands/commandServiceImpl';
+import { debounce } from '../../../utils';
 
-import ChatPanel from "./chatPanel/chatPanel";
-import * as styles from "./emulator.scss";
-import LogPanel from "./logPanel/logPanel";
-import { InspectorContainer } from "./parts";
-import PlaybackBar from "./playbackBar/playbackBar";
-import { ToolBar } from "./toolbar/toolbar";
+import ChatPanel from './chatPanel/chatPanel';
+import * as styles from './emulator.scss';
+import LogPanel from './logPanel/logPanel';
+import { InspectorContainer } from './parts';
+import PlaybackBar from './playbackBar/playbackBar';
+import { ToolBar } from './toolbar/toolbar';
 
 const { encode } = base64Url;
 
 const RestartConversationOptions = {
-  NewUserId: "Restart with new user ID",
-  SameUserId: "Restart with same user ID"
+  NewUserId: 'Restart with new user ID',
+  SameUserId: 'Restart with same user ID',
 };
 
-export type EmulatorMode = "transcript" | "livechat";
+export type EmulatorMode = 'transcript' | 'livechat';
 
 interface EmulatorProps {
   activeDocumentId?: string;
@@ -97,14 +97,14 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
   private readonly onVerticalSizeChange = debounce(sizes => {
     this.props.document.ui = {
       ...this.props.document.ui,
-      verticalSplitter: sizes
+      verticalSplitter: sizes,
     };
   }, 500);
 
   private readonly onHorizontalSizeChange = debounce(sizes => {
     this.props.document.ui = {
       ...this.props.document.ui,
-      horizontalSplitter: sizes
+      horizontalSplitter: sizes,
     };
   }, 500);
 
@@ -112,7 +112,9 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
     super(props);
   }
 
-  public shouldStartNewConversation(props: EmulatorProps = this.props): boolean {
+  public shouldStartNewConversation(
+    props: EmulatorProps = this.props
+  ): boolean {
     return (
       !props.document.directLine ||
       props.document.conversationId !== props.document.directLine.conversationId
@@ -120,14 +122,14 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
   }
 
   public componentWillMount() {
-    window.addEventListener("keydown", this.keyboardEventListener);
+    window.addEventListener('keydown', this.keyboardEventListener);
     if (this.shouldStartNewConversation()) {
       this.startNewConversation();
     }
   }
 
   public componentWillUnmount() {
-    window.removeEventListener("keydown", this.keyboardEventListener);
+    window.removeEventListener('keydown', this.keyboardEventListener);
   }
 
   public componentWillReceiveProps(nextProps: EmulatorProps) {
@@ -151,10 +153,10 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
 
     if (switchedDocuments) {
       if (switchedToThisDocument) {
-        window.removeEventListener("keydown", keyboardEventListener);
-        window.addEventListener("keydown", keyboardEventListener);
+        window.removeEventListener('keydown', keyboardEventListener);
+        window.addEventListener('keydown', keyboardEventListener);
       } else {
-        window.removeEventListener("keydown", keyboardEventListener);
+        window.removeEventListener('keydown', keyboardEventListener);
       }
     }
   }
@@ -177,7 +179,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
     const options = {
       conversationId,
       conversationMode: props.mode,
-      endpointId: props.endpointId
+      endpointId: props.endpointId,
     };
 
     if (props.document.directLine) {
@@ -186,7 +188,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
 
     this.initConversation(props, options, selectedActivity$, subscription);
 
-    if (props.mode === "transcript") {
+    if (props.mode === 'transcript') {
       try {
         const conversation = await CommandServiceImpl.remoteCall(
           SharedConstants.Commands.Emulator.NewTranscript,
@@ -255,7 +257,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
     const directLine = new BotChat.DirectLine({
       secret: encodedOptions,
       domain: `${this.props.url}/v3/directline`,
-      webSocket: false
+      webSocket: false,
     });
 
     this.props.newConversation(props.documentId, {
@@ -263,7 +265,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
       // webChatStore,
       directLine,
       selectedActivity$,
-      subscription
+      subscription,
     });
   }
 
@@ -274,7 +276,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
   }
 
   public renderPresentationView(): JSX.Element {
-    const transcriptMode = this.props.mode === "transcript";
+    const transcriptMode = this.props.mode === 'transcript';
     const chatPanelChild = transcriptMode ? (
       <div className={styles.presentationPlaybackDock}>
         <PlaybackBar />
@@ -303,7 +305,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
 
     return (
       <div className={styles.emulator}>
-        {this.props.mode === "livechat" && (
+        {this.props.mode === 'livechat' && (
           <div className={styles.header}>
             <ToolBar>
               <SplitButton
@@ -314,7 +316,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
               />
               <button
                 className={`${styles.saveTranscriptIcon} ${styles.toolbarIcon ||
-                  ""}`}
+                  ''}`}
                 onClick={this.onExportClick}
               >
                 Save transcript
@@ -358,13 +360,13 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
 
   private getVerticalSplitterSizes = (): { [0]: string } => {
     return {
-      0: `${this.props.document.ui.verticalSplitter[0].percentage}`
+      0: `${this.props.document.ui.verticalSplitter[0].percentage}`,
     };
   };
 
   private getHorizontalSplitterSizes = (): { [0]: string } => {
     return {
-      0: `${this.props.document.ui.horizontalSplitter[0].percentage}`
+      0: `${this.props.document.ui.horizontalSplitter[0].percentage}`,
     };
   };
 
@@ -380,7 +382,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
     this.props.setInspectorObjects(this.props.document.documentId, []);
 
     switch (option) {
-      case NewUserId:
+      case NewUserId: {
         const newUserId = uniqueIdv4();
         // set new user as current on emulator facilities side
         await CommandServiceImpl.remoteCall(
@@ -389,6 +391,7 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
         );
         this.props.updateChat(this.props.documentId, { userId: newUserId });
         break;
+      }
 
       case SameUserId:
         this.startNewConversation();
@@ -413,10 +416,10 @@ class EmulatorComponent extends React.Component<EmulatorProps, {}> {
   ): void => {
     // Meta corresponds to 'Command' on Mac
     const ctrlOrCmdPressed =
-      event.getModifierState("Control") || event.getModifierState("Meta");
-    const shiftPressed = ctrlOrCmdPressed && event.getModifierState("Shift");
+      event.getModifierState('Control') || event.getModifierState('Meta');
+    const shiftPressed = ctrlOrCmdPressed && event.getModifierState('Shift');
     const key = event.key.toLowerCase();
-    if (ctrlOrCmdPressed && shiftPressed && key === "r") {
+    if (ctrlOrCmdPressed && shiftPressed && key === 'r') {
       this.onStartOverClick();
     }
   };
@@ -431,7 +434,7 @@ const mapStateToProps = (
   conversationId: state.chat.chats[documentId].conversationId,
   document: state.chat.chats[documentId],
   endpointId: state.chat.chats[documentId].endpointId,
-  presentationModeEnabled: state.presentation.enabled
+  presentationModeEnabled: state.presentation.enabled,
 });
 
 const mapDispatchToProps = (dispatch): EmulatorProps => ({
@@ -449,7 +452,7 @@ const mapDispatchToProps = (dispatch): EmulatorProps => ({
   updateDocument: (documentId, updatedValues: Partial<Document>) =>
     dispatch(updateDocument(documentId, updatedValues)),
   createErrorNotification: (notification: Notification) =>
-    dispatch(beginAdd(notification))
+    dispatch(beginAdd(notification)),
 });
 
 export const Emulator = connect(

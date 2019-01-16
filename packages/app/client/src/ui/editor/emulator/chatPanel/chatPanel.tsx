@@ -30,12 +30,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-import * as React from "react";
+import * as React from 'react';
 
-import { EmulatorMode } from "../emulator";
-import { ChatContainer } from "../parts/chat/chatContainer";
+import { EmulatorMode } from '../emulator';
+import { ChatContainer } from '../parts/chat/chatContainer';
 
-import * as styles from "./chatPanel.scss";
+import * as styles from './chatPanel.scss';
 
 interface ChatPanelProps {
   document: any;
@@ -46,10 +46,10 @@ interface ChatPanelProps {
 
 export default class ChatPanel extends React.Component<ChatPanelProps, {}> {
   public render() {
-    const { endpointUrl } = this.props.document || { endpointUrl: "" };
+    const { endpointUrl } = this.props.document || { endpointUrl: '' };
 
     return (
-      <div className={`${styles.chatPanel} ${this.props.className || ""}`}>
+      <div className={`${styles.chatPanel} ${this.props.className || ''}`}>
         <header>{endpointUrl}</header>
         <ChatContainer
           mode={this.props.mode}

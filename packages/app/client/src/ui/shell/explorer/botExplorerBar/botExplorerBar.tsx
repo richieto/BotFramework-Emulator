@@ -31,15 +31,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-import { IBotConfiguration } from "botframework-config/lib/schema";
-import * as React from "react";
+import { IBotConfiguration } from 'botframework-config/lib/schema';
+import * as React from 'react';
 
-import { BotNotOpenExplorer } from "../botNotOpenExplorer";
-import { EndpointExplorerContainer } from "../endpointExplorer";
-import * as explorerStyles from "../explorerStyles.scss";
-import { ServicesExplorerContainer } from "../servicesExplorer";
+import { BotNotOpenExplorer } from '../botNotOpenExplorer';
+import { EndpointExplorerContainer } from '../endpointExplorer';
+import * as explorerStyles from '../explorerStyles.scss';
+import { ServicesExplorerContainer } from '../servicesExplorer';
 
-import * as styles from "./botExplorerBar.scss";
+import * as styles from './botExplorerBar.scss';
 
 interface BotExplorerBarState {
   isBotActive: boolean;
@@ -59,7 +59,7 @@ export default class BotExplorerBar extends React.Component<
 
   public static getDerivedStateFromProps(newProps: BotExplorerBarProps) {
     return {
-      isBotActive: !!newProps.activeBot
+      isBotActive: !!newProps.activeBot,
     };
   }
 
@@ -77,7 +77,7 @@ export default class BotExplorerBar extends React.Component<
   }
 
   public render() {
-    const className = this.props.hidden ? styles.explorerOffScreen : "";
+    const className = this.props.hidden ? styles.explorerOffScreen : '';
     const explorerBody = this.props.activeBot
       ? this.activeBotJsx
       : this.botNotOpenJsx;
